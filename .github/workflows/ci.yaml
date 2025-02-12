@@ -73,3 +73,7 @@ jobs:
 
       - name: Check spelling
         uses: crate-ci/typos@v1.29.5
+        with:
+          files: |
+            .
+            .github/**
