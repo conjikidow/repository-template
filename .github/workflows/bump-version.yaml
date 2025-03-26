@@ -12,6 +12,6 @@ jobs:
       contents: write
       pull-requests: write
     steps:
-      - uses: conjikidow/bump-version@0f6ba27350d5a641d3758609138144044aca78b2 # v1.1.2
+      - uses: conjikidow/bump-version@3740833a6b629ed63272d8120cab6349ebf224a4 # v1.2.0
         with:
           labels-to-add: "automated,versioning"
