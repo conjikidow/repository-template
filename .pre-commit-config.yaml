@@ -15,7 +15,7 @@ repos:
       - id: trailing-whitespace
         args: ["--markdown-linebreak-ext=md"]
       - id: pretty-format-json
-        args: [--autofix, --no-sort-keys]
+        args: ["--autofix", "--no-sort-keys"]
       - id: check-json
       - id: check-yaml
       - id: check-toml
