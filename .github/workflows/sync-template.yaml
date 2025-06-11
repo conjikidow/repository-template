@@ -1,8 +1,9 @@
 name: Sync Template Repository
 
 on:
-  pull_request:
-    types: [closed]
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
 
 jobs:
 
