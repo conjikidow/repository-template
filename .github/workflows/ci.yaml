@@ -102,6 +102,8 @@ jobs:
 
       - name: Set up Commitizen
         uses: commitizen-tools/setup-cz@d9dea553c82d773957ef71a6ca2be84e3c175bf5 # v0.6.0
+        with:
+          python-version: '3.x'
 
       - name: Lint commit messages on push
         if: github.event_name == 'push'
