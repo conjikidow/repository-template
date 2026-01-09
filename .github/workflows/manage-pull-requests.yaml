@@ -21,3 +21,17 @@ jobs:
           configuration-path: .github/labels/labeler.yaml
           sync-labels: false
           dot: true
+
+  lint-pr-title:
+    name: Lint PR title
+    if: github.event.action != 'edited' || github.event.changes.title != null
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up Commitizen
+        uses: commitizen-tools/setup-cz@d9dea553c82d773957ef71a6ca2be84e3c175bf5 # v0.6.0
+
+      - name: Lint pull request title
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: cz check --message "$PR_TITLE"
