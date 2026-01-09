@@ -24,7 +24,7 @@ These settings are **necessary only for private repositories**. For public repos
 To enable pre-commit hooks in your repository, you need to install `pre-commit` by running the following command:
 
 ```console
-uvx pre-commit install
+uvx pre-commit install --hook-type pre-commit --hook-type commit-msg --hook-type pre-push
 ```
 
 ## Version Bumping by Labels
