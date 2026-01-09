@@ -72,8 +72,8 @@ jobs:
         # with:
         #   advanced-security: false  # must be false for private repo
 
-  check-spelling:
-    name: Check spelling
+  check-typos:
+    name: Check typos
     runs-on: ubuntu-latest
 
     steps:

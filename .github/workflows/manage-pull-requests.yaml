@@ -1,13 +1,14 @@
-name: Label Pull Requests
+name: Manage Pull Requests
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened, labeled]
+    types: [opened, synchronize, reopened, edited]
 
 jobs:
 
   labeler:
     name: labeler
+    if: github.event.action != 'edited'
     permissions:
       contents: read
       pull-requests: write
