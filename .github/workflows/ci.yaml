@@ -20,6 +20,7 @@ jobs:
       doc: ${{ steps.changed-files.outputs.doc_any_changed }}
       test: ${{ steps.changed-files.outputs.test_any_changed }}
       workflow: ${{ steps.changed-files.outputs.workflow_any_changed }}
+      workflow_ci: ${{ steps.changed-files.outputs.workflow_ci_any_changed }}
 
     steps:
       - name: Checkout the main repository
@@ -44,6 +45,8 @@ jobs:
               - '!**/tests/**/*.md'
             workflow:
               - .github/workflows/**
+            workflow_ci:
+              - .github/workflows/ci.yaml
 
   lint-gh-actions:
     name: Lint GitHub Actions
