@@ -147,7 +147,6 @@ jobs:
         run: |
           npx --yes markdownlint-cli2 . 2>&1 |
             reviewdog \
-              -f=efm \
               -efm="%f:%l:%c %m" \
               -efm="%f:%l %m" \
               -name=markdownlint \
