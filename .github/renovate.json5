@@ -4,26 +4,6 @@
     'config:recommended',
     'helpers:pinGitHubActionDigests',
   ],
-  packageRules: [
-    {
-      matchCategories: [
-        'ci',
-      ],
-      addLabels: [
-        'ci',
-      ],
-      // automerge: true,
-    },
-    {
-      matchManagers: [
-        'pre-commit',
-      ],
-      addLabels: [
-        'pre-commit',
-      ],
-      // automerge: true,
-    },
-  ],
   customManagers: [
     {
       customType: 'regex',
@@ -112,6 +92,42 @@
       ],
       datasourceTemplate: 'crate',
       depNameTemplate: 'taplo-cli',
+    },
+  ],
+  packageRules: [
+    {
+      matchFileNames: [
+        '.github/workflows/**',
+      ],
+      addLabels: [
+        'ci',
+      ],
+    },
+    {
+      matchManagers: [
+        'pre-commit',
+      ],
+      addLabels: [
+        'pre-commit',
+      ],
+    },
+    {
+      matchFileNames: [
+        '.github/workflows/**',
+      ],
+      matchUpdateTypes: [
+        'patch',
+      ],
+      automerge: true,
+    },
+    {
+      matchManagers: [
+        'pre-commit',
+      ],
+      matchUpdateTypes: [
+        'patch',
+      ],
+      automerge: true,
     },
   ],
   'git-submodules': {
