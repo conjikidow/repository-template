@@ -157,7 +157,7 @@ jobs:
 
       - name: Lint YAML
         if: github.event_name != 'pull_request'
-        run: uvx --from "yamllint==1.37.1" yamllint .
+        run: uvx --from "yamllint==1.38.0" yamllint .
 
       - name: Lint YAML (reviewdog)
         if: github.event_name == 'pull_request'
