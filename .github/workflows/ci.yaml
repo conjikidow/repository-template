@@ -186,10 +186,10 @@ jobs:
         run: cargo install taplo-cli --locked
 
       - name: Check TOML format
-        run: taplo fmt --check .
+        run: taplo fmt --check
 
       - name: Lint TOML
-        run: taplo lint .
+        run: taplo lint
 
   check-prek:
     name: Check prek
