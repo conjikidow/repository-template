@@ -12,6 +12,7 @@
       addLabels: [
         'ci',
       ],
+      // automerge: true,
     },
     {
       matchManagers: [
@@ -20,6 +21,7 @@
       addLabels: [
         'pre-commit',
       ],
+      // automerge: true,
     },
   ],
   customManagers: [
