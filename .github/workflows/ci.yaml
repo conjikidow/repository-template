@@ -183,7 +183,7 @@ jobs:
           persist-credentials: false
 
       - name: Install Taplo
-        run: cargo install taplo-cli --locked --version 0.10.0
+        run: cargo install taplo-cli@0.10.0 --locked
 
       - name: Check TOML format
         run: taplo fmt --check
