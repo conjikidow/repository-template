@@ -89,8 +89,9 @@ jobs:
 
       - name: Run zizmor
         uses: zizmorcore/zizmor-action@0dce2577a4760a2749d8cfb7a84b7d5585ebcb7d # v0.5.0
-        # with:
-        #   advanced-security: false  # must be false for private repo
+        with:
+          version: 'v1.22.0'
+          # advanced-security: false  # must be false for private repo
 
   lint-markdown:
     name: Lint Markdown
@@ -114,6 +115,8 @@ jobs:
       - name: Set up reviewdog
         if: github.event_name == 'pull_request'
         uses: reviewdog/action-setup@d8a7baabd7f3e8544ee4dbde3ee41d0011c3a93f # v1.5.0
+        with:
+          reviewdog_version: 'v0.21.0'
 
       - name: Lint Markdown (reviewdog)
         if: github.event_name == 'pull_request'
@@ -206,8 +209,8 @@ jobs:
       - name: Check prek
         uses: j178/prek-action@0bb87d7f00b0c99306c8bcb8b8beba1eb581c037 # v1.1.1
         with:
+          prek-version: 'v0.3.3'
           extra-args: '--all-files --skip no-commit-to-branch'
-          prek-version: '0.3.3'
 
   check-typos:
     name: Check typos
