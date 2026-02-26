@@ -90,7 +90,7 @@ jobs:
   lint-yaml:
     name: Lint YAML
     needs: determine-changes
-    if: ${{ needs.determine-changes.outputs.yaml == 'true' }}
+    if: ${{ needs.determine-changes.outputs.yaml == 'true' || needs.determine-changes.outputs.workflow_ci == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -122,7 +122,7 @@ jobs:
   lint-markdown:
     name: Lint Markdown
     needs: determine-changes
-    if: ${{ needs.determine-changes.outputs.doc == 'true' }}
+    if: ${{ needs.determine-changes.outputs.doc == 'true' || needs.determine-changes.outputs.workflow_ci == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
