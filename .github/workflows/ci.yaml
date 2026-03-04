@@ -20,8 +20,10 @@ jobs:
       test: ${{ steps.changed-files.outputs.test_any_changed }}
       workflow: ${{ steps.changed-files.outputs.workflow_any_changed }}
       workflow_ci: ${{ steps.changed-files.outputs.workflow_ci_any_changed }}
+      renovate_config: ${{ steps.changed-files.outputs.renovate_config_any_changed }}
       md: ${{ steps.changed-files.outputs.md_any_changed }}
       json5: ${{ steps.changed-files.outputs.json5_any_changed }}
+      json5_files: ${{ steps.changed-files.outputs.json5_all_changed_files }}
       toml: ${{ steps.changed-files.outputs.toml_any_changed }}
       yaml: ${{ steps.changed-files.outputs.yaml_any_changed }}
 
@@ -47,6 +49,8 @@ jobs:
               - .github/workflows/**
             workflow_ci:
               - .github/workflows/ci.yaml
+            renovate_config:
+              - .github/renovate.json5
             md:
               - '**/*.md'
               - .markdownlint-cli2.yaml
@@ -142,6 +146,25 @@ jobs:
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  validate-renovate-config:
+    name: Validate Renovate config
+    needs: determine-changes
+    if: ${{ needs.determine-changes.outputs.renovate_config == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout the main repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Validate Renovate config
+        run: |
+          npx --yes --package renovate@41.97.7 \
+            renovate-config-validator .github/renovate.json5
+
   lint-json5:
     name: Lint JSON5
     needs: determine-changes
@@ -157,8 +180,22 @@ jobs:
           persist-credentials: false
 
       - name: Check JSON5 syntax
+        env:
+          CHANGED_JSON5_FILES: ${{ needs.determine-changes.outputs.json5_files }}
         run: |
-          npx --yes json5@2.2.3 .github/renovate.json5 >/dev/null
+          readarray -t json5_files < <(
+            printf '%s\n' "${CHANGED_JSON5_FILES}" | tr ' ' '\n' | sed '/^$/d'
+          )
+          if [ ${#json5_files[@]} -eq 0 ]; then
+            readarray -d '' -t json5_files < <(
+              find . -type f -name '*.json5' -not -path './.git/*' -print0
+            )
+          fi
+          if [ ${#json5_files[@]} -eq 0 ]; then
+            echo 'No JSON5 files found.'
+            exit 0
+          fi
+          npx --yes json5@2.2.3 "${json5_files[@]}" >/dev/null
 
   lint-toml:
     name: Lint TOML
