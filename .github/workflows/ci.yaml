@@ -20,9 +20,12 @@ jobs:
       test: ${{ steps.changed-files.outputs.test_any_changed }}
       workflow: ${{ steps.changed-files.outputs.workflow_any_changed }}
       workflow_ci: ${{ steps.changed-files.outputs.workflow_ci_any_changed }}
+      renovate_config: ${{ steps.changed-files.outputs.renovate_config_any_changed }}
       md: ${{ steps.changed-files.outputs.md_any_changed }}
-      yaml: ${{ steps.changed-files.outputs.yaml_any_changed }}
+      json5: ${{ steps.changed-files.outputs.json5_any_changed }}
+      json5_files: ${{ steps.changed-files.outputs.json5_all_changed_files }}
       toml: ${{ steps.changed-files.outputs.toml_any_changed }}
+      yaml: ${{ steps.changed-files.outputs.yaml_any_changed }}
 
     steps:
       - name: Checkout the main repository
@@ -46,16 +49,20 @@ jobs:
               - .github/workflows/**
             workflow_ci:
               - .github/workflows/ci.yaml
+            renovate_config:
+              - .github/renovate.json5
             md:
               - '**/*.md'
               - .markdownlint-cli2.yaml
+            json5:
+              - '**/*.json5'
+            toml:
+              - '**/*.toml'
+              - .taplo.toml
             yaml:
               - '**/*.yml'
               - '**/*.yaml'
               - .yamllint.yaml
-            toml:
-              - '**/*.toml'
-              - .taplo.toml
 
   lint-gh-actions:
     name: Lint GitHub Actions
@@ -120,6 +127,8 @@ jobs:
 
       - name: Lint Markdown (reviewdog)
         if: github.event_name == 'pull_request'
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           markdownlint_rc=0
           npx --yes markdownlint-cli2@0.21.0 . > /tmp/markdownlint-report.txt 2>&1 || markdownlint_rc=$?
@@ -135,8 +144,85 @@ jobs:
             exit $markdownlint_rc
           fi
           exit $reviewdog_rc
+
+  validate-renovate-config:
+    name: Validate Renovate config
+    needs: determine-changes
+    if: ${{ needs.determine-changes.outputs.renovate_config == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout the main repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
+        with:
+          node-version: 22
+
+      - name: Validate Renovate config
+        run: |
+          npx --yes --package renovate@41.97.7 \
+            renovate-config-validator .github/renovate.json5
+
+  lint-json5:
+    name: Lint JSON5
+    needs: determine-changes
+    if: ${{ needs.determine-changes.outputs.json5 == 'true' || needs.determine-changes.outputs.workflow_ci == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout the main repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Check JSON5 syntax
         env:
-          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CHANGED_JSON5_FILES: ${{ needs.determine-changes.outputs.json5_files }}
+        run: |
+          readarray -t json5_files < <(
+            printf '%s\n' "${CHANGED_JSON5_FILES}" | tr ' ' '\n' | sed '/^$/d'
+          )
+          if [ ${#json5_files[@]} -eq 0 ]; then
+            readarray -d '' -t json5_files < <(
+              find . -type f -name '*.json5' -not -path './.git/*' -print0
+            )
+          fi
+          if [ ${#json5_files[@]} -eq 0 ]; then
+            echo 'No JSON5 files found.'
+            exit 0
+          fi
+          npx --yes json5@2.2.3 "${json5_files[@]}" >/dev/null
+
+  lint-toml:
+    name: Lint TOML
+    needs: determine-changes
+    if: ${{ needs.determine-changes.outputs.toml == 'true' || needs.determine-changes.outputs.workflow_ci == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout the main repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Install Taplo
+        run: cargo install taplo-cli@0.10.0 --locked
+
+      - name: Check TOML format
+        run: taplo fmt --check
+
+      - name: Lint TOML
+        run: taplo lint
 
   lint-yaml:
     name: Lint YAML
@@ -171,29 +257,6 @@ jobs:
           reporter: github-pr-review
           fail_level: error
           yamllint_flags: .
-
-  lint-toml:
-    name: Lint TOML
-    needs: determine-changes
-    if: ${{ needs.determine-changes.outputs.toml == 'true' || needs.determine-changes.outputs.workflow_ci == 'true' }}
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-
-    steps:
-      - name: Checkout the main repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          persist-credentials: false
-
-      - name: Install Taplo
-        run: cargo install taplo-cli@0.10.0 --locked
-
-      - name: Check TOML format
-        run: taplo fmt --check
-
-      - name: Lint TOML
-        run: taplo lint
 
   check-prek:
     name: Check prek
