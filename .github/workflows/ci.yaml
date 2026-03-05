@@ -148,7 +148,9 @@ jobs:
   validate-renovate-config:
     name: Validate Renovate config
     needs: determine-changes
-    if: ${{ needs.determine-changes.outputs.renovate_config == 'true' }}
+    if: >-
+      ${{ needs.determine-changes.outputs.renovate_config == 'true' ||
+      needs.determine-changes.outputs.workflow_ci == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
