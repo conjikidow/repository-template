@@ -110,7 +110,7 @@
         '/^\\.github/workflows/ci\\.ya?ml$/',
       ],
       matchStrings: [
-        'yamllint==(?<currentValue>\\S+)',
+        'yamllint==(?<currentValue>[^"\\s]+)',
       ],
       datasourceTemplate: 'pypi',
       depNameTemplate: 'yamllint',
