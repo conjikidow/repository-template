@@ -100,6 +100,32 @@ jobs:
           version: 'v1.23.1'
           # advanced-security: false  # must be false for private repo
 
+  validate-renovate-config:
+    name: Validate Renovate config
+    needs: determine-changes
+    if: >-
+      ${{ needs.determine-changes.outputs.renovate_config == 'true' ||
+      needs.determine-changes.outputs.workflow_ci == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout the main repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
+        with:
+          node-version: 24
+
+      - name: Validate Renovate config
+        run: |
+          npx --yes --package renovate@43.60.5 \
+            renovate-config-validator .github/renovate.json5
+
   lint-markdown:
     name: Lint Markdown
     needs: determine-changes
@@ -144,32 +170,6 @@ jobs:
             exit $markdownlint_rc
           fi
           exit $reviewdog_rc
-
-  validate-renovate-config:
-    name: Validate Renovate config
-    needs: determine-changes
-    if: >-
-      ${{ needs.determine-changes.outputs.renovate_config == 'true' ||
-      needs.determine-changes.outputs.workflow_ci == 'true' }}
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-
-    steps:
-      - name: Checkout the main repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          persist-credentials: false
-
-      - name: Set up Node.js
-        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
-        with:
-          node-version: 24
-
-      - name: Validate Renovate config
-        run: |
-          npx --yes --package renovate@43.60.5 \
-            renovate-config-validator .github/renovate.json5
 
   lint-json5:
     name: Lint JSON5
