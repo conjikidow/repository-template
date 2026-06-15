@@ -282,6 +282,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           tool_name: tombi
+          cleanup: 'false'
 
       - name: Check TOML format
         run: git diff --exit-code
