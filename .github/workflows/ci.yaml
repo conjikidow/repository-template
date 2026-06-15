@@ -257,12 +257,12 @@ jobs:
               severity = m[1]; message = m[2]; next
             }
             match($0, /^[[:space:]]*at[[:space:]]+(.*):([0-9]+):([0-9]+)/, m) {
-              printf "%s:%s:%s: %s: %s\n", m[1], m[2], m[3], severity, message
+              printf "%s:%s:%s: %s: %s\n", m[1], m[2], m[3], substr(severity, 1, 1), message
             }
           ' /tmp/tombi-lint-report.txt > /tmp/tombi-lint-report.efm.txt
           reviewdog_rc=0
           reviewdog < /tmp/tombi-lint-report.efm.txt \
-              -efm="%f:%l:%c: %m" \
+              -efm="%f:%l:%c: %t: %m" \
               -name=tombi-lint \
               -reporter=github-pr-review \
               -fail-level=error || reviewdog_rc=$?
@@ -281,7 +281,7 @@ jobs:
         uses: reviewdog/action-suggester@aa38384ceb608d00f84b4690cacc83a5aba307ff # v1.24.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          tool_name: tombi
+          tool_name: tombi-format
           cleanup: 'false'
 
       - name: Check TOML format
