@@ -113,6 +113,33 @@
   ],
   packageRules: [
     {
+      matchDepNames: [
+        'crate-ci/typos',
+      ],
+      groupName: 'typos',
+    },
+    {
+      matchDepNames: [
+        'DavidAnson/markdownlint-cli2',
+        'markdownlint-cli2',
+      ],
+      groupName: 'markdownlint-cli2',
+    },
+    {
+      matchDepNames: [
+        'adrienverge/yamllint',
+        'yamllint',
+      ],
+      groupName: 'yamllint',
+    },
+    {
+      matchDepNames: [
+        'commitizen-tools/commitizen',
+        'commitizen',
+      ],
+      groupName: 'commitizen',
+    },
+    {
       matchFileNames: [
         '.github/workflows/**',
       ],
