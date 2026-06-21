@@ -117,6 +117,12 @@
   ],
   packageRules: [
     {
+      matchManagers: [
+        'github-actions',
+      ],
+      allowedVersions: '/^v?\\d+\\.\\d+\\.\\d+$/',
+    },
+    {
       matchDepNames: [
         'crate-ci/typos',
       ],
