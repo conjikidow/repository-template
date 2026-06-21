@@ -13,7 +13,7 @@
       matchStringsStrategy: 'recursive',
       matchStrings: [
         "uses: commitizen-tools/setup-cz@[a-f0-9]{40}[^\\n]*\\n(?:\\s+with:\\n(?:\\s+[^\\n]+\\n)*?)\\s+version: '[^'\\s]+'",
-        "version: '(?<currentValue>[^'\\s]+)'",
+        "\\n\\s+version: '(?<currentValue>[^'\\s]+)'",
       ],
       datasourceTemplate: 'pypi',
       depNameTemplate: 'commitizen',
@@ -61,7 +61,7 @@
       matchStringsStrategy: 'recursive',
       matchStrings: [
         "uses: reviewdog/action-setup@[a-f0-9]{40}[^\\n]*\\n(?:\\s+with:\\n(?:\\s+[^\\n]+\\n)*?)\\s+reviewdog_version: '[^'\\s]+'",
-        "reviewdog_version: '(?<currentValue>[^'\\s]+)'",
+        "\\n\\s+reviewdog_version: '(?<currentValue>[^'\\s]+)'",
       ],
       datasourceTemplate: 'github-releases',
       depNameTemplate: 'reviewdog/reviewdog',
@@ -85,7 +85,7 @@
       matchStringsStrategy: 'recursive',
       matchStrings: [
         "uses: tombi-toml/setup-tombi@[a-f0-9]{40}[^\\n]*\\n(?:\\s+with:\\n(?:\\s+[^\\n]+\\n)*?)\\s+version: '[^'\\s]+'",
-        "version: '(?<currentValue>[^'\\s]+)'",
+        "\\n\\s+version: '(?<currentValue>[^'\\s]+)'",
       ],
       datasourceTemplate: 'github-releases',
       depNameTemplate: 'tombi-toml/tombi',
@@ -109,7 +109,7 @@
       matchStringsStrategy: 'recursive',
       matchStrings: [
         "uses: j178/prek-action@[a-f0-9]{40}[^\\n]*\\n(?:\\s+with:\\n(?:\\s+[^\\n]+\\n)*?)\\s+prek-version: '[^'\\s]+'",
-        "prek-version: '(?<currentValue>[^'\\s]+)'",
+        "\\n\\s+prek-version: '(?<currentValue>[^'\\s]+)'",
       ],
       datasourceTemplate: 'github-releases',
       depNameTemplate: 'j178/prek',
