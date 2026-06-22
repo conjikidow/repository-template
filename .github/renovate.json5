@@ -127,9 +127,10 @@
     },
     {
       matchDepNames: [
-        'crate-ci/typos',
+        'commitizen-tools/commitizen',
+        'commitizen',
       ],
-      groupName: 'typos',
+      groupName: 'commitizen',
     },
     {
       matchDepNames: [
@@ -140,17 +141,24 @@
     },
     {
       matchDepNames: [
+        'tombi-toml/setup-tombi',
+        'tombi-toml/tombi',
+        'tombi-toml/tombi-pre-commit',
+      ],
+      groupName: 'tombi',
+    },
+    {
+      matchDepNames: [
+        'crate-ci/typos',
+      ],
+      groupName: 'typos',
+    },
+    {
+      matchDepNames: [
         'adrienverge/yamllint',
         'yamllint',
       ],
       groupName: 'yamllint',
-    },
-    {
-      matchDepNames: [
-        'commitizen-tools/commitizen',
-        'commitizen',
-      ],
-      groupName: 'commitizen',
     },
     {
       matchDepNames: [
