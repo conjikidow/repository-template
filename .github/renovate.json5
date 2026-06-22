@@ -127,9 +127,10 @@
     },
     {
       matchDepNames: [
-        'crate-ci/typos',
+        'commitizen-tools/commitizen',
+        'commitizen',
       ],
-      groupName: 'typos',
+      groupName: 'commitizen',
     },
     {
       matchDepNames: [
@@ -140,6 +141,12 @@
     },
     {
       matchDepNames: [
+        'crate-ci/typos',
+      ],
+      groupName: 'typos',
+    },
+    {
+      matchDepNames: [
         'adrienverge/yamllint',
         'yamllint',
       ],
@@ -147,10 +154,10 @@
     },
     {
       matchDepNames: [
-        'commitizen-tools/commitizen',
-        'commitizen',
+        'zizmorcore/zizmor-action',
+        'ghcr.io/zizmorcore/zizmor',
       ],
-      groupName: 'commitizen',
+      groupName: 'zizmor',
     },
     {
       matchFileNames: [
