@@ -8,9 +8,7 @@ rules:
       .github/workflows/*.yml
       .github/workflows/*.yaml
   truthy:
-    ignore: |
-      .github/workflows/*.yml
-      .github/workflows/*.yaml
+    check-keys: false
   comments:
     ignore: |
       .github/workflows/*.yml
