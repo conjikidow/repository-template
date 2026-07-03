@@ -1,6 +1,6 @@
 name: Bump Version
 
-on:
+'on':
   pull_request:
     types: [closed]
   workflow_dispatch:

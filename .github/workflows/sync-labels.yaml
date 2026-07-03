@@ -1,6 +1,6 @@
 name: Sync Labels
 
-on:
+'on':
   workflow_dispatch:
   push:
     branches:
