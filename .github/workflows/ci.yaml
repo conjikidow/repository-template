@@ -20,13 +20,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
-      github_actions: ${{ steps.changed-files.outputs.github_actions_any_changed }}
-      github_actions_ci: ${{ steps.changed-files.outputs.github_actions_ci_any_changed }}
-      pre_commit_config: ${{ steps.changed-files.outputs.pre_commit_config_any_changed }}
-      renovate_config: ${{ steps.changed-files.outputs.renovate_config_any_changed }}
+      github-actions: ${{ steps.changed-files.outputs.github_actions_any_changed }}
+      github-actions-ci: ${{ steps.changed-files.outputs.github_actions_ci_any_changed }}
+      pre-commit-config: ${{ steps.changed-files.outputs.pre_commit_config_any_changed }}
+      renovate-config: ${{ steps.changed-files.outputs.renovate_config_any_changed }}
       md: ${{ steps.changed-files.outputs.md_any_changed }}
       json5: ${{ steps.changed-files.outputs.json5_any_changed }}
-      json5_files: ${{ steps.changed-files.outputs.json5_all_changed_files }}
+      json5-files: ${{ steps.changed-files.outputs.json5_all_changed_files }}
       toml: ${{ steps.changed-files.outputs.toml_any_changed }}
       yaml: ${{ steps.changed-files.outputs.yaml_any_changed }}
 
@@ -67,7 +67,7 @@ jobs:
   lint-gh-actions:
     name: Lint GitHub Actions
     needs: determine-changes
-    if: ${{ needs.determine-changes.outputs.github_actions == 'true' }}
+    if: ${{ needs.determine-changes.outputs.github-actions == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -99,8 +99,8 @@ jobs:
     name: Audit with zizmor
     needs: determine-changes
     if: >-
-      ${{ needs.determine-changes.outputs.github_actions == 'true' ||
-      needs.determine-changes.outputs.pre_commit_config == 'true' }}
+      ${{ needs.determine-changes.outputs.github-actions == 'true' ||
+      needs.determine-changes.outputs.pre-commit-config == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -137,8 +137,8 @@ jobs:
     name: Validate Renovate config
     needs: determine-changes
     if: >-
-      ${{ needs.determine-changes.outputs.renovate_config == 'true' ||
-      needs.determine-changes.outputs.github_actions_ci == 'true' }}
+      ${{ needs.determine-changes.outputs.renovate-config == 'true' ||
+      needs.determine-changes.outputs.github-actions-ci == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -165,7 +165,7 @@ jobs:
     needs: determine-changes
     if: >-
       ${{ needs.determine-changes.outputs.md == 'true' ||
-      needs.determine-changes.outputs.github_actions_ci == 'true' }}
+      needs.determine-changes.outputs.github-actions-ci == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -188,7 +188,7 @@ jobs:
     needs: determine-changes
     if: >-
       ${{ needs.determine-changes.outputs.json5 == 'true' ||
-      needs.determine-changes.outputs.github_actions_ci == 'true' }}
+      needs.determine-changes.outputs.github-actions-ci == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -202,7 +202,7 @@ jobs:
 
       - name: Check JSON5 syntax
         env:
-          CHANGED_JSON5_FILES: ${{ needs.determine-changes.outputs.json5_files }}
+          CHANGED_JSON5_FILES: ${{ needs.determine-changes.outputs.json5-files }}
         run: |
           readarray -t json5_files < <(
             printf '%s\n' "${CHANGED_JSON5_FILES}" | sed '/^$/d'
@@ -227,7 +227,7 @@ jobs:
     needs: determine-changes
     if: >-
       ${{ needs.determine-changes.outputs.toml == 'true' ||
-      needs.determine-changes.outputs.github_actions_ci == 'true' }}
+      needs.determine-changes.outputs.github-actions-ci == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -304,7 +304,7 @@ jobs:
     needs: determine-changes
     if: >-
       ${{ needs.determine-changes.outputs.yaml == 'true' ||
-      needs.determine-changes.outputs.github_actions_ci == 'true' }}
+      needs.determine-changes.outputs.github-actions-ci == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -404,14 +404,14 @@ jobs:
       - name: Lint commit messages on push
         if: github.event_name == 'push'
         env:
-          BEFORE_SHA: ${{ github.event.before }}
+          PUSH_BEFORE_SHA: ${{ github.event.before }}
           HEAD_SHA: ${{ github.sha }}
         run: |
-          if ! git cat-file -e "${BEFORE_SHA}^{commit}" 2>/dev/null; then
+          if ! git cat-file -e "${PUSH_BEFORE_SHA}^{commit}" 2>/dev/null; then
             echo "::notice title=cz check::Base commit unavailable (new branch or force push); skipping lint."
             exit 0
           fi
-          cz check --rev-range "${BEFORE_SHA}..${HEAD_SHA}"
+          cz check --rev-range "${PUSH_BEFORE_SHA}..${HEAD_SHA}"
 
       - name: Lint commit messages on pull request
         if: github.event_name == 'pull_request'
