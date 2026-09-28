@@ -11,6 +11,10 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
+defaults:
+  run:
+    shell: bash
+
 permissions: {}
 
 jobs:
@@ -219,9 +223,9 @@ jobs:
           fi
           exit_code=0
           for json5_file in "${json5_files[@]}"; do
-            npx --yes json5@2.2.3 --validate "$json5_file" || exit_code=1
+            npx --yes json5@2.2.3 --validate "${json5_file}" || exit_code=1
           done
-          exit $exit_code
+          exit ${exit_code}
 
   lint-toml:
     name: Lint TOML
@@ -279,12 +283,12 @@ jobs:
               -reporter=github-pr-review \
               -filter-mode=nofilter \
               -fail-level=error || reviewdog_rc=$?
-          if [ $lint_rc -ne 0 ] && [ ! -s /tmp/tombi-lint-report.efm.txt ]; then
+          if [ ${lint_rc} -ne 0 ] && [ ! -s /tmp/tombi-lint-report.efm.txt ]; then
             echo "::error title=tombi::tombi lint failed before producing parseable diagnostics"
             cat /tmp/tombi-lint-report.txt
-            exit $lint_rc
+            exit ${lint_rc}
           fi
-          exit $reviewdog_rc
+          exit ${reviewdog_rc}
 
       - name: Format TOML
         run: tombi format
@@ -409,14 +413,16 @@ jobs:
         if: github.event_name == 'push'
         env:
           PUSH_BEFORE_SHA: ${{ github.event.before }}
-          HEAD_SHA: ${{ github.sha }}
         run: |
           if ! git cat-file -e "${PUSH_BEFORE_SHA}^{commit}" 2>/dev/null; then
             echo "::notice title=cz check::Base commit unavailable (new branch or force push); skipping lint."
             exit 0
           fi
-          cz check --rev-range "${PUSH_BEFORE_SHA}..${HEAD_SHA}"
+          cz check --rev-range "${PUSH_BEFORE_SHA}..${GITHUB_SHA}"
 
       - name: Lint commit messages (pull request)
         if: github.event_name == 'pull_request'
-        run: cz check --rev-range ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}
+        env:
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: cz check --rev-range "${PR_BASE_SHA}..${PR_HEAD_SHA}"
