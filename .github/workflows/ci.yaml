@@ -5,7 +5,7 @@ on:
     types: [opened, synchronize, reopened]
   push:
     branches:
-      - main
+      - 'main'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
@@ -50,16 +50,16 @@ jobs:
           separator: "\n"
           files_yaml: |
             github_actions:
-              - .github/workflows/**
+              - '.github/workflows/**'
             github_actions_ci:
-              - .github/workflows/ci.yaml
+              - '.github/workflows/ci.yaml'
             pre_commit_config:
-              - .pre-commit-config.yaml
+              - '.pre-commit-config.yaml'
             renovate_config:
-              - .github/renovate.json5
+              - '.github/renovate.json5'
             md:
               - '**/*.md'
-              - .rumdl.toml
+              - '.rumdl.toml'
             json5:
               - '**/*.json5'
             toml:
@@ -67,12 +67,12 @@ jobs:
             yaml:
               - '**/*.yml'
               - '**/*.yaml'
-              - .yamllint.yaml
+              - '.yamllint.yaml'
 
   lint-github-actions:
     name: Lint GitHub Actions
     needs: determine-changes
-    if: ${{ needs.determine-changes.outputs.github-actions == 'true' }}
+    if: needs.determine-changes.outputs.github-actions == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -104,8 +104,8 @@ jobs:
     name: Audit with zizmor
     needs: determine-changes
     if: >-
-      ${{ needs.determine-changes.outputs.github-actions == 'true' ||
-      needs.determine-changes.outputs.pre-commit-config == 'true' }}
+      needs.determine-changes.outputs.github-actions == 'true'
+      || needs.determine-changes.outputs.pre-commit-config == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -127,12 +127,9 @@ jobs:
 
       - name: Audit with zizmor (SARIF upload)
         if: >-
-          ${{
-            always() &&
-            github.event.repository.private == false &&
-            (github.event_name != 'pull_request' ||
-            github.event.pull_request.head.repo.full_name == github.repository)
-          }}
+          always()
+          && github.event.repository.private == false
+          && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
         uses: zizmorcore/zizmor-action@cc914d7f3750a2d13d75c7f184a1060aa0e9d482 # v0.6.4
         with:
           version: 'v1.30.1'
@@ -142,8 +139,8 @@ jobs:
     name: Validate Renovate config
     needs: determine-changes
     if: >-
-      ${{ needs.determine-changes.outputs.renovate-config == 'true' ||
-      needs.determine-changes.outputs.github-actions-ci == 'true' }}
+      needs.determine-changes.outputs.renovate-config == 'true'
+      || needs.determine-changes.outputs.github-actions-ci == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -158,19 +155,17 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: 24
+          node-version: '24'
 
       - name: Validate Renovate config
-        run: |
-          npx --yes --package renovate@44.103.6 \
-            renovate-config-validator .github/renovate.json5
+        run: npx --yes --package renovate@44.103.6 renovate-config-validator .github/renovate.json5
 
   lint-markdown:
     name: Lint Markdown
     needs: determine-changes
     if: >-
-      ${{ needs.determine-changes.outputs.md == 'true' ||
-      needs.determine-changes.outputs.github-actions-ci == 'true' }}
+      needs.determine-changes.outputs.md == 'true'
+      || needs.determine-changes.outputs.github-actions-ci == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -192,8 +187,8 @@ jobs:
     name: Validate JSON5
     needs: determine-changes
     if: >-
-      ${{ needs.determine-changes.outputs.json5 == 'true' ||
-      needs.determine-changes.outputs.github-actions-ci == 'true' }}
+      needs.determine-changes.outputs.json5 == 'true'
+      || needs.determine-changes.outputs.github-actions-ci == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -231,8 +226,8 @@ jobs:
     name: Lint TOML
     needs: determine-changes
     if: >-
-      ${{ needs.determine-changes.outputs.toml == 'true' ||
-      needs.determine-changes.outputs.github-actions-ci == 'true' }}
+      needs.determine-changes.outputs.toml == 'true'
+      || needs.determine-changes.outputs.github-actions-ci == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -264,7 +259,7 @@ jobs:
         if: github.event_name == 'pull_request'
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NO_COLOR: '1'
+          NO_COLOR: 1
         run: |
           lint_rc=0
           tombi lint --quiet > /tmp/tombi-lint-report.txt 2>&1 || lint_rc=$?
@@ -299,7 +294,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           tool_name: tombi-format
-          cleanup: 'false'
+          cleanup: false
 
       - name: Check TOML formatting
         run: git diff --exit-code
@@ -308,8 +303,8 @@ jobs:
     name: Lint YAML
     needs: determine-changes
     if: >-
-      ${{ needs.determine-changes.outputs.yaml == 'true' ||
-      needs.determine-changes.outputs.github-actions-ci == 'true' }}
+      needs.determine-changes.outputs.yaml == 'true'
+      || needs.determine-changes.outputs.github-actions-ci == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -359,7 +354,7 @@ jobs:
         uses: j178/prek-action@4e14d07f9231acabce116ccfca13b13dd9755ece # v3.0.0
         with:
           prek-version: 'v0.5.3'
-          extra-args: '--all-files --skip no-commit-to-branch'
+          extra-args: --all-files --skip no-commit-to-branch
 
   check-spelling:
     name: Check spelling
