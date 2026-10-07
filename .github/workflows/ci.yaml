@@ -39,7 +39,7 @@ jobs:
       yaml: ${{ steps.changed-files.outputs.yaml_any_changed }}
 
     steps:
-      - name: Checkout the main repository
+      - name: Check out the repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
@@ -83,7 +83,7 @@ jobs:
       pull-requests: write
 
     steps:
-      - name: Checkout the main repository
+      - name: Check out the repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
@@ -116,7 +116,7 @@ jobs:
       security-events: write
 
     steps:
-      - name: Checkout the main repository
+      - name: Check out the repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
@@ -150,7 +150,7 @@ jobs:
       contents: read
 
     steps:
-      - name: Checkout the main repository
+      - name: Check out the repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
@@ -175,7 +175,7 @@ jobs:
       contents: read
 
     steps:
-      - name: Checkout the main repository
+      - name: Check out the repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
@@ -198,7 +198,7 @@ jobs:
       contents: read
 
     steps:
-      - name: Checkout the main repository
+      - name: Check out the repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
@@ -238,7 +238,7 @@ jobs:
       pull-requests: write
 
     steps:
-      - name: Checkout the main repository
+      - name: Check out the repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
@@ -315,7 +315,7 @@ jobs:
       pull-requests: write
 
     steps:
-      - name: Checkout the main repository
+      - name: Check out the repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
@@ -348,7 +348,7 @@ jobs:
       contents: read
 
     steps:
-      - name: Checkout the main repository
+      - name: Check out the repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
@@ -368,7 +368,7 @@ jobs:
       pull-requests: write
 
     steps:
-      - name: Checkout the main repository
+      - name: Check out the repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
@@ -395,7 +395,7 @@ jobs:
       contents: read
 
     steps:
-      - name: Checkout the main repository
+      - name: Check out the repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
