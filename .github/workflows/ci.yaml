@@ -156,12 +156,13 @@ jobs:
           npx --package=renovate@44.132.2 --yes renovate-config-validator --strict --no-global .github/renovate.json5 \
             | jq --raw-output --arg file .github/renovate.json5 '
                 def escape: gsub("%"; "%25") | gsub("\r"; "%0D") | gsub("\n"; "%0A");
-                .msg,
+                def level: if .level >= 50 then "ERROR" elif .level >= 40 then "WARN" else "INFO" end;
+                "\(level): \(.msg)",
                 (.err.message? // empty),
-                (.errors[]? | "::error file=\($file),title=\(.topic)::\(.message | escape)"),
-                (.warnings[]? | "::warning file=\($file),title=\(.topic)::\(.message | escape)"),
-                (select(.msg | startswith("Config migration necessary"))
-                  | "::warning file=\($file),title=Config migration necessary::See the log for the diff.")
+                (.errors[]? | "::error file=\($file),title=\(.topic)::\(.topic): \(.message | escape)"),
+                (.warnings[]? | "::warning file=\($file),title=\(.topic)::\(.topic): \(.message | escape)"),
+                (select(.msg == "Config migration necessary")
+                  | "::warning file=\($file),title=\(.msg)::\(.msg): See the log for the diff.")
               '
 
   lint-markdown:
