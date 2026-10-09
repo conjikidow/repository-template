@@ -1,0 +1,20 @@
+---
+name: Annotation test
+
+on:
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  annotation-test:
+    name: Annotation test
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Reference an undefined step output
+        if: steps.missing.outputs.value == 'x'
+        run: echo "unreachable"
+
+      - name: Leave a variable unquoted
+        run: echo $HOME

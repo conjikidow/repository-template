@@ -1,0 +1,4 @@
+{
+  name: "invalid character",
+  values: [1, 2,,],
+}
