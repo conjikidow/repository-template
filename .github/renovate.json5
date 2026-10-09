@@ -4,6 +4,9 @@
     'config:best-practices',
   ],
   minimumReleaseAge: '3 days',
+  unknownOption: true,
+  allowedCommands: ['^echo'],
+  semanticCommits: true,
   customManagers: [
     {
       customType: 'regex',
