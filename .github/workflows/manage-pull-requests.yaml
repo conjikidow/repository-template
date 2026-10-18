@@ -35,9 +35,9 @@ jobs:
           GH_REPO: ${{ github.repository }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
-          issue="$(gh api "repos/{owner}/{repo}/issues/${PR_NUMBER}")"
-          title="$(jq --raw-output '.title' <<<"${issue}")"
-          mapfile -t current_labels < <(jq --raw-output '.labels[].name' <<<"${issue}")
+          pull_request="$(gh api "repos/{owner}/{repo}/pulls/${PR_NUMBER}")"
+          title="$(jq --raw-output '.title' <<<"${pull_request}")"
+          mapfile -t current_labels < <(jq --raw-output '.labels[].name' <<<"${pull_request}")
 
           title_pattern='^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\([^[:space:]]+\))?(!)?: '
           wanted_labels=()
